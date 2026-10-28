@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,6 +40,12 @@ public class CustomerController {
     @GetMapping("/all")
     public List<Customer> all() {
         return customerService.findAll();
+    }
+
+    @GetMapping("/by-last-name")
+    public ResponseEntity<List<Customer>> byLastName(@RequestParam String lastName) {
+        List<Customer> customers = customerService.getByLastName(lastName);
+        return ResponseEntity.ok(customers);
     }
 
     @GetMapping("/{id}")

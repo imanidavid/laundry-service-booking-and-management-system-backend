@@ -1,6 +1,7 @@
 package com.aua.laundry.controller;
 
 import com.aua.laundry.entity.LaundryOrder;
+import com.aua.laundry.entity.LaundryStatus;
 import com.aua.laundry.service.LaundryOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +42,20 @@ public class LaundryOrderController {
     @GetMapping("/all")
     public List<LaundryOrder> all() {
         return laundryOrderService.findAll();
+    }
+
+    @GetMapping("/by-status")
+    public ResponseEntity<List<LaundryOrder>> byStatus(@RequestParam LaundryStatus status) {
+        List<LaundryOrder> laundryOrders = laundryOrderService.getByStatus(status);
+        return ResponseEntity.ok(laundryOrders);
+    }
+
+    @GetMapping("/between")
+    public ResponseEntity<List<LaundryOrder>> between(@RequestParam String start, @RequestParam String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        List<LaundryOrder> laundryOrders = laundryOrderService.getBetween(startDate, endDate);
+        return ResponseEntity.ok(laundryOrders);
     }
 
     @GetMapping("/{id}")

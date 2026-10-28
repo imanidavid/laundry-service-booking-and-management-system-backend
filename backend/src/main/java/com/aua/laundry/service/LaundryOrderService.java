@@ -3,11 +3,13 @@ package com.aua.laundry.service;
 import com.aua.laundry.entity.Attendant;
 import com.aua.laundry.entity.Customer;
 import com.aua.laundry.entity.LaundryOrder;
+import com.aua.laundry.entity.LaundryStatus;
 import com.aua.laundry.repository.AttendantRepository;
 import com.aua.laundry.repository.CustomerRepository;
 import com.aua.laundry.repository.LaundryOrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +36,14 @@ public class LaundryOrderService {
 
     public List<LaundryOrder> findAll() {
         return laundryOrderRepository.findAll();
+    }
+
+    public List<LaundryOrder> getByStatus(LaundryStatus status) {
+        return laundryOrderRepository.findByStatusOrderByPickupDateAsc(status);
+    }
+
+    public List<LaundryOrder> getBetween(LocalDate start, LocalDate end) {
+        return laundryOrderRepository.findByPickupDateBetweenOrderByPickupDateAsc(start, end);
     }
 
     public Optional<LaundryOrder> findById(UUID id) {
