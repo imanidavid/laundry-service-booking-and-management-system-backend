@@ -48,6 +48,15 @@ public class CustomerController {
         return ResponseEntity.ok(customers);
     }
 
+    @GetMapping("/of-attendant/{attendantId}")
+    public ResponseEntity<?> ofAttendant(@PathVariable UUID attendantId) {
+        Optional<List<Customer>> customers = customerService.getOfAttendant(attendantId);
+        if (customers.isEmpty()) {
+            return new ResponseEntity<>("The attendant with that id does not exist", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(customers.get());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<Customer> optional = customerService.findById(id);

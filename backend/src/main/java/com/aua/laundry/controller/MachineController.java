@@ -41,6 +41,12 @@ public class MachineController {
         return machineService.findAll();
     }
 
+    @GetMapping("/free")
+    public ResponseEntity<List<Machine>> free() {
+        List<Machine> machines = machineService.getFreeMachines();
+        return ResponseEntity.ok(machines);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<Machine> optional = machineService.findById(id);

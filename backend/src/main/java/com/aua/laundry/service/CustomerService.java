@@ -1,6 +1,7 @@
 package com.aua.laundry.service;
 
 import com.aua.laundry.entity.Customer;
+import com.aua.laundry.repository.AttendantRepository;
 import com.aua.laundry.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,11 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final AttendantRepository attendantRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, AttendantRepository attendantRepository) {
         this.customerRepository = customerRepository;
+        this.attendantRepository = attendantRepository;
     }
 
     public String save(Customer customer) {
@@ -28,6 +31,13 @@ public class CustomerService {
 
     public List<Customer> getByLastName(String lastName) {
         return customerRepository.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
+    }
+
+    public Optional<List<Customer>> getOfAttendant(UUID attendantId) {
+        if (!attendantRepository.existsById(attendantId)) {
+            return Optional.empty();
+        }
+        return Optional.of(customerRepository.findOfAttendant(attendantId));
     }
 
     public Optional<Customer> findById(UUID id) {

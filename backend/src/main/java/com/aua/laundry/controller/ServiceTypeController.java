@@ -41,6 +41,12 @@ public class ServiceTypeController {
         return serviceTypeService.findAll();
     }
 
+    @GetMapping("/unused")
+    public ResponseEntity<List<ServiceType>> unused() {
+        List<ServiceType> serviceTypes = serviceTypeService.getUnused();
+        return ResponseEntity.ok(serviceTypes);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<ServiceType> optional = serviceTypeService.findById(id);

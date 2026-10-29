@@ -26,6 +26,10 @@ public class MachineService {
         return machineRepository.findAll();
     }
 
+    public List<Machine> getFreeMachines() {
+        return machineRepository.findFreeMachines();
+    }
+
     public Optional<Machine> findById(UUID id) {
         return machineRepository.findById(id);
     }

@@ -26,6 +26,10 @@ public class ServiceTypeService {
         return serviceTypeRepository.findAll();
     }
 
+    public List<ServiceType> getUnused() {
+        return serviceTypeRepository.findUnused();
+    }
+
     public Optional<ServiceType> findById(UUID id) {
         return serviceTypeRepository.findById(id);
     }

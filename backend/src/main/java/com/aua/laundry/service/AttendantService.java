@@ -30,6 +30,10 @@ public class AttendantService {
         return attendantRepository.findAll();
     }
 
+    public List<Attendant> getByServiceTypeName(String name) {
+        return attendantRepository.findByServiceTypeName(name);
+    }
+
     public Optional<Attendant> findById(UUID id) {
         return attendantRepository.findById(id);
     }
