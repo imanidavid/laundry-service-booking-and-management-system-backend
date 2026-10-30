@@ -30,7 +30,7 @@ public class MachineController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody Machine machine) {
         String message = machineService.save(machine);
-        if (message.equals("Machine saved successfully")) {
+        if (message.equals("machine saved")) {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -51,7 +51,7 @@ public class MachineController {
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<Machine> optional = machineService.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The machine with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("machine with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class MachineController {
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody Machine machine) {
         Optional<Machine> optional = machineService.update(id, machine);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The machine with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("machine with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class MachineController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = machineService.delete(id);
-        if (message.equals("The machine with that id does not exist")) {
+        if (message.startsWith("machine with ")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

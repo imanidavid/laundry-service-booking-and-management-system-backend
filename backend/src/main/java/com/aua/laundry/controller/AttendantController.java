@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,7 +32,7 @@ public class AttendantController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody Attendant attendant) {
         String message = attendantService.save(attendant);
-        if (message.equals("Attendant saved successfully")) {
+        if (message.equals("attendant saved")) {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -52,7 +53,7 @@ public class AttendantController {
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<Attendant> optional = attendantService.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The attendant with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("attendant with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -61,15 +62,45 @@ public class AttendantController {
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody Attendant attendant) {
         Optional<Attendant> optional = attendantService.update(id, attendant);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The attendant with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("attendant with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{attendantId}/service-types/{serviceTypeId}")
+    public ResponseEntity<String> addServiceType(@PathVariable UUID attendantId, @PathVariable UUID serviceTypeId) {
+        String message = attendantService.addServiceType(attendantId, serviceTypeId);
+        if (message.startsWith("attendant with ")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        if (message.startsWith("service type with ")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        if (message.equals("attendant already has service type")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{attendantId}/machine")
+    public ResponseEntity<String> moveMachine(@PathVariable UUID attendantId, @RequestParam int machineNumber) {
+        String message = attendantService.moveAttendantToMachine(attendantId, machineNumber);
+        if (message.startsWith("attendant with ")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        if (message.startsWith("machine with ")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        if (message.equals("machine taken by another attendant")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = attendantService.delete(id);
-        if (message.equals("The attendant with that id does not exist")) {
+        if (message.startsWith("attendant with ")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

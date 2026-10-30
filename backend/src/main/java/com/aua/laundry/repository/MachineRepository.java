@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MachineRepository extends JpaRepository<Machine, UUID> {
@@ -15,5 +16,7 @@ public interface MachineRepository extends JpaRepository<Machine, UUID> {
             ORDER BY m.machineNumber
             """)
     List<Machine> findFreeMachines();
+
+    Optional<Machine> findByMachineNumber(int machineNumber);
 
 }

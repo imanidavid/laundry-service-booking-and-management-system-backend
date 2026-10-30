@@ -30,8 +30,17 @@ public class LaundryOrderService {
     }
 
     public String save(LaundryOrder laundryOrder) {
+        if (laundryOrder.getPickupDate() == null || laundryOrder.getPickupDate().isBefore(LocalDate.now())) {
+            return "laundry date cannot be in past";
+        }
+        if (laundryOrder.getAttendant() != null && laundryOrder.getAttendant().getId() != null
+                && laundryOrderRepository.existsByAttendant_IdAndPickupDateAndStatusNot(
+                laundryOrder.getAttendant().getId(), laundryOrder.getPickupDate(), LaundryStatus.CANCELLED)) {
+            return "attendant already has order on that date";
+        }
+        laundryOrder.setStatus(LaundryStatus.RECEIVED);
         laundryOrderRepository.save(laundryOrder);
-        return "Laundry order saved successfully";
+        return "laundry saved";
     }
 
     public List<LaundryOrder> findAll() {
@@ -57,7 +66,6 @@ public class LaundryOrderService {
         }
         LaundryOrder laundryOrder = optional.get();
         laundryOrder.setPickupDate(request.getPickupDate());
-        laundryOrder.setStatus(request.getStatus());
         laundryOrder.setBags(request.getBags());
         laundryOrder.setWeightKg(request.getWeightKg());
         if (request.getCustomer() != null && request.getCustomer().getId() != null) {
@@ -84,12 +92,34 @@ public class LaundryOrderService {
         return Optional.of(laundryOrder);
     }
 
+    public String changeStatus(UUID id, LaundryStatus newStatus) {
+        Optional<LaundryOrder> optional = laundryOrderRepository.findById(id);
+        if (optional.isEmpty()) {
+            return "laundry with " + id + " dont exist";
+        }
+        LaundryOrder laundryOrder = optional.get();
+        LaundryStatus current = laundryOrder.getStatus();
+        boolean allowed = false;
+        if (current == LaundryStatus.RECEIVED && (newStatus == LaundryStatus.WASHING || newStatus == LaundryStatus.CANCELLED)) {
+            allowed = true;
+        }
+        if (current == LaundryStatus.WASHING && (newStatus == LaundryStatus.READY || newStatus == LaundryStatus.CANCELLED)) {
+            allowed = true;
+        }
+        if (!allowed) {
+            return "cannot change status from " + current + " to " + newStatus;
+        }
+        laundryOrder.setStatus(newStatus);
+        laundryOrderRepository.save(laundryOrder);
+        return "laundry status updated";
+    }
+
     public String delete(UUID id) {
         if (!laundryOrderRepository.existsById(id)) {
-            return "The laundry order with that id does not exist";
+            return "laundry with " + id + " dont exist";
         }
         laundryOrderRepository.deleteById(id);
-        return "Laundry order deleted successfully";
+        return "laundry deleted";
     }
 
 }

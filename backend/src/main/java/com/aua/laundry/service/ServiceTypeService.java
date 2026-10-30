@@ -19,7 +19,7 @@ public class ServiceTypeService {
 
     public String save(ServiceType serviceType) {
         serviceTypeRepository.save(serviceType);
-        return "Service type saved successfully";
+        return "service type saved";
     }
 
     public List<ServiceType> findAll() {
@@ -47,10 +47,10 @@ public class ServiceTypeService {
 
     public String delete(UUID id) {
         if (!serviceTypeRepository.existsById(id)) {
-            return "The service type with that id does not exist";
+            return "service type with " + id + " dont exist";
         }
         serviceTypeRepository.deleteById(id);
-        return "Service type deleted successfully";
+        return "service type deleted";
     }
 
 }

@@ -31,7 +31,7 @@ public class CustomerController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody Customer customer) {
         String message = customerService.save(customer);
-        if (message.equals("Customer saved successfully")) {
+        if (message.equals("customer saved")) {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -52,7 +52,7 @@ public class CustomerController {
     public ResponseEntity<?> ofAttendant(@PathVariable UUID attendantId) {
         Optional<List<Customer>> customers = customerService.getOfAttendant(attendantId);
         if (customers.isEmpty()) {
-            return new ResponseEntity<>("The attendant with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("attendant with " + attendantId + " dont exist", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(customers.get());
     }
@@ -61,7 +61,7 @@ public class CustomerController {
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<Customer> optional = customerService.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The customer with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("customer with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -70,7 +70,7 @@ public class CustomerController {
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody Customer customer) {
         Optional<Customer> optional = customerService.update(id, customer);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The customer with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("customer with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -78,7 +78,7 @@ public class CustomerController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = customerService.delete(id);
-        if (message.equals("The customer with that id does not exist")) {
+        if (message.startsWith("customer with ")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

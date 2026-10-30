@@ -14,4 +14,6 @@ public interface LaundryOrderRepository extends JpaRepository<LaundryOrder, UUID
 
     List<LaundryOrder> findByPickupDateBetweenOrderByPickupDateAsc(LocalDate start, LocalDate end);
 
+    boolean existsByAttendant_IdAndPickupDateAndStatusNot(UUID attendantId, LocalDate pickupDate, LaundryStatus status);
+
 }

@@ -30,7 +30,7 @@ public class ServiceTypeController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody ServiceType serviceType) {
         String message = serviceTypeService.save(serviceType);
-        if (message.equals("Service type saved successfully")) {
+        if (message.equals("service type saved")) {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -51,7 +51,7 @@ public class ServiceTypeController {
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<ServiceType> optional = serviceTypeService.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The service type with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("service type with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class ServiceTypeController {
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody ServiceType serviceType) {
         Optional<ServiceType> optional = serviceTypeService.update(id, serviceType);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The service type with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("service type with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class ServiceTypeController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = serviceTypeService.delete(id);
-        if (message.equals("The service type with that id does not exist")) {
+        if (message.startsWith("service type with ")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

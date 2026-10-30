@@ -1,6 +1,7 @@
 package com.aua.laundry.repository;
 
 import com.aua.laundry.entity.Attendant;
+import com.aua.laundry.entity.Machine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +17,7 @@ public interface AttendantRepository extends JpaRepository<Attendant, UUID> {
             WHERE LOWER(s.name) = LOWER(:name)
             """)
     List<Attendant> findByServiceTypeName(@Param("name") String name);
+
+    boolean existsByMachine(Machine machine);
 
 }

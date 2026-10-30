@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +34,13 @@ public class LaundryOrderController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody LaundryOrder laundryOrder) {
         String message = laundryOrderService.save(laundryOrder);
-        if (message.equals("Laundry order saved successfully")) {
+        if (message.equals("laundry date cannot be in past")) {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+        if (message.equals("attendant already has order on that date")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        }
+        if (message.equals("laundry saved")) {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -62,7 +69,7 @@ public class LaundryOrderController {
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<LaundryOrder> optional = laundryOrderService.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The laundry order with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("laundry with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -71,15 +78,27 @@ public class LaundryOrderController {
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody LaundryOrder laundryOrder) {
         Optional<LaundryOrder> optional = laundryOrderService.update(id, laundryOrder);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("The laundry order with that id does not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("laundry with " + id + " dont exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> changeStatus(@PathVariable UUID id, @RequestParam LaundryStatus status) {
+        String message = laundryOrderService.changeStatus(id, status);
+        if (message.startsWith("laundry with ")) {
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        if (message.startsWith("cannot change status")) {
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = laundryOrderService.delete(id);
-        if (message.equals("The laundry order with that id does not exist")) {
+        if (message.startsWith("laundry with ")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

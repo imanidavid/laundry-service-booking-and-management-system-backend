@@ -19,7 +19,7 @@ public class MachineService {
 
     public String save(Machine machine) {
         machineRepository.save(machine);
-        return "Machine saved successfully";
+        return "machine saved";
     }
 
     public List<Machine> findAll() {
@@ -48,10 +48,10 @@ public class MachineService {
 
     public String delete(UUID id) {
         if (!machineRepository.existsById(id)) {
-            return "The machine with that id does not exist";
+            return "machine with " + id + " dont exist";
         }
         machineRepository.deleteById(id);
-        return "Machine deleted successfully";
+        return "machine deleted";
     }
 
 }
