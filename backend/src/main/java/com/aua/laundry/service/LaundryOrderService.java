@@ -6,6 +6,7 @@ import com.aua.laundry.entity.LaundryOrder;
 import com.aua.laundry.entity.LaundryStatus;
 import com.aua.laundry.repository.AttendantRepository;
 import com.aua.laundry.repository.CustomerRepository;
+import com.aua.laundry.repository.DeliveryNoteRepository;
 import com.aua.laundry.repository.LaundryOrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +21,16 @@ public class LaundryOrderService {
     private final LaundryOrderRepository laundryOrderRepository;
     private final CustomerRepository customerRepository;
     private final AttendantRepository attendantRepository;
+    private final DeliveryNoteRepository deliveryNoteRepository;
 
     public LaundryOrderService(LaundryOrderRepository laundryOrderRepository,
                                CustomerRepository customerRepository,
-                               AttendantRepository attendantRepository) {
+                               AttendantRepository attendantRepository,
+                               DeliveryNoteRepository deliveryNoteRepository) {
         this.laundryOrderRepository = laundryOrderRepository;
         this.customerRepository = customerRepository;
         this.attendantRepository = attendantRepository;
+        this.deliveryNoteRepository = deliveryNoteRepository;
     }
 
     public String save(LaundryOrder laundryOrder) {
@@ -115,8 +119,12 @@ public class LaundryOrderService {
     }
 
     public String delete(UUID id) {
-        if (!laundryOrderRepository.existsById(id)) {
+        Optional<LaundryOrder> optional = laundryOrderRepository.findById(id);
+        if (optional.isEmpty()) {
             return "laundry with " + id + " dont exist";
+        }
+        if (deliveryNoteRepository.existsByLaundryOrder(optional.get())) {
+            return "delete delivery notes first";
         }
         laundryOrderRepository.deleteById(id);
         return "laundry deleted";

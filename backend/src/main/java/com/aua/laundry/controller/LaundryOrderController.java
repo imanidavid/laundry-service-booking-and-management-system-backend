@@ -101,6 +101,9 @@ public class LaundryOrderController {
         if (message.startsWith("laundry with ")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
+        if (message.equals("delete delivery notes first")) {
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
