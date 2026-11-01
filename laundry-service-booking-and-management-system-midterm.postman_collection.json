@@ -1,0 +1,496 @@
+{
+  "info": {
+    "name": "Laundry Service Booking And Management System Midterm",
+    "description": "INSY 8322 midterm collection. One request per requirement, named by its ID. Run the requests in order for the demo. Use the alternate values in each description to show the error case.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8085"
+    },
+    {
+      "key": "laundryOrderId",
+      "value": "0f746295-6eb5-4f94-b69a-d4d136cbb5cd"
+    },
+    {
+      "key": "customerId",
+      "value": "fea76202-51fb-4342-bf37-50086796c530"
+    },
+    {
+      "key": "customerPhone",
+      "value": "0789012345"
+    },
+    {
+      "key": "readyCustomerPhone",
+      "value": "0789000002"
+    },
+    {
+      "key": "attendantId",
+      "value": "482b1222-6c01-4317-8789-ec19b1c8cdef"
+    },
+    {
+      "key": "bobId",
+      "value": "4672d7b2-4acb-4da2-8acd-884aee2916fb"
+    },
+    {
+      "key": "caraId",
+      "value": "2754300b-cb0f-47db-9ce1-b68f1511da29"
+    },
+    {
+      "key": "foldingServiceTypeId",
+      "value": "3995fc3a-ead8-4f70-85be-48e4beb31822"
+    },
+    {
+      "key": "readyOrderId",
+      "value": "0f746295-6eb5-4f94-b69a-d4d136cbb5cd"
+    },
+    {
+      "key": "receivedOrderId",
+      "value": "4c2854a7-50fd-4980-a3b7-c4fd565aee1c"
+    },
+    {
+      "key": "deliveryNoteId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "futureDate",
+      "value": "2027-01-15"
+    },
+    {
+      "key": "cancelDate",
+      "value": "2026-10-20"
+    }
+  ],
+  "item": [
+    {
+      "name": "A2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/{{laundryOrderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "{{laundryOrderId}}"
+          ]
+        },
+        "description": "A2 CRUD read. Success: 200 with the laundry order. Error: replace the id with 00000000-0000-0000-0000-000000000000 to get 404 The laundry order with that id does not exist."
+      }
+    },
+    {
+      "name": "B1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/customers/by-last-name?lastName=nzeyimana",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "customers",
+            "by-last-name"
+          ],
+          "query": [
+            {
+              "key": "lastName",
+              "value": "nzeyimana"
+            }
+          ]
+        },
+        "description": "B1 derived query. Success: 200 with customers whose lastName is Nzeyimana, sorted by firstName. Empty case: use lastName=unknown."
+      }
+    },
+    {
+      "name": "B2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/by-status?status=RECEIVED",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "by-status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "RECEIVED"
+            }
+          ]
+        },
+        "description": "B2 derived query. Success: 200 with RECEIVED orders, earliest pickupDate first. Empty case: use status=CANCELLED after cancelling all cancelled orders."
+      }
+    },
+    {
+      "name": "B3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/between?start=2026-10-01&end=2026-10-31",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "between"
+          ],
+          "query": [
+            {
+              "key": "start",
+              "value": "2026-10-01"
+            },
+            {
+              "key": "end",
+              "value": "2026-10-31"
+            }
+          ]
+        },
+        "description": "B3 derived query. Success: 200 with October 2026 orders, pickupDate ascending. Empty case: use 2025-01-01 and 2025-01-31."
+      }
+    },
+    {
+      "name": "C1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/attendants/by-service-type?name=washing",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "attendants",
+            "by-service-type"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "washing"
+            }
+          ]
+        },
+        "description": "C1 JPQL join. Success: 200 with attendants holding Washing, case-insensitive. Empty case: use name=unknown."
+      }
+    },
+    {
+      "name": "C2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/machines/free",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "machines",
+            "free"
+          ]
+        },
+        "description": "C2 JPQL NOT EXISTS. Success: 200 with machine 4 before D4 runs."
+      }
+    },
+    {
+      "name": "C3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/service-types/unused",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "service-types",
+            "unused"
+          ]
+        },
+        "description": "C3 JPQL IS EMPTY. Success: 200 with Folding before D3 runs."
+      }
+    },
+    {
+      "name": "C4",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/customers/of-attendant/{{attendantId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "customers",
+            "of-attendant",
+            "{{attendantId}}"
+          ]
+        },
+        "description": "C4 JPQL DISTINCT. Success: 200 with distinct customers of Alice. Error: replace the id with 00000000-0000-0000-0000-000000000000 to get 404 The attendant with that id does not exist."
+      }
+    },
+    {
+      "name": "D1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pickupDate\": \"{{futureDate}}\",\n  \"bags\": 2,\n  \"weightKg\": 3.0,\n  \"customer\": {\n    \"id\": \"{{customerId}}\"\n  },\n  \"attendant\": {\n    \"id\": \"{{bobId}}\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/save",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "save"
+          ]
+        },
+        "description": "D1 safe saving. Success: 201 Laundry order saved successfully. Error cases: use pickupDate 2020-01-01 for 400 Laundry order date cannot be in the past; run again on the same future date for 409 Attendant already processes an order on that date."
+      }
+    },
+    {
+      "name": "D2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/{{receivedOrderId}}/status?status=WASHING",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "{{receivedOrderId}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "WASHING"
+            }
+          ]
+        },
+        "description": "D2 status flow. Success: 200 Laundry order status updated successfully. Error: use status=READY on the same RECEIVED order for 400 Cannot change status from RECEIVED to READY; use an unknown id for 404."
+      }
+    },
+    {
+      "name": "D3",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/attendants/{{caraId}}/service-types/{{foldingServiceTypeId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "attendants",
+            "{{caraId}}",
+            "service-types",
+            "{{foldingServiceTypeId}}"
+          ]
+        },
+        "description": "D3 add service type. Success: 200 Service type added to the attendant. Error: run again for 409 The attendant already has that service type; use an unknown service type id for 404 That service type does not exist."
+      }
+    },
+    {
+      "name": "D4",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/attendants/{{caraId}}/machine?machineNumber=4",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "attendants",
+            "{{caraId}}",
+            "machine"
+          ],
+          "query": [
+            {
+              "key": "machineNumber",
+              "value": "4"
+            }
+          ]
+        },
+        "description": "D4 move machine. Success: 200 Machine changed successfully. Error: after success, move Alice to machineNumber=4 for 409 That machine is taken by another attendant; use machineNumber=99 for 404 The machine with that machineNumber does not exist."
+      }
+    },
+    {
+      "name": "E1",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"garmentName\": \"Shirts\",\n  \"condition\": \"Washed and ironed, one missing button\",\n  \"pieces\": 5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/delivery-notes/save?laundryOrderId={{readyOrderId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "delivery-notes",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "laundryOrderId",
+              "value": "{{readyOrderId}}"
+            }
+          ]
+        },
+        "description": "E1 write delivery note. Success: 201 Delivery note saved successfully. Error: use receivedOrderId for 400 Delivery notes are only for READY laundry orders; use an unknown order id for 404."
+      }
+    },
+    {
+      "name": "E2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/delivery-notes/customer/{{readyCustomerPhone}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "delivery-notes",
+            "customer",
+            "{{readyCustomerPhone}}"
+          ]
+        },
+        "description": "E2 JPQL path navigation. Success: 200 with the customer delivery notes, newest deliveryDate first. This request also stores the first note id in the deliveryNoteId variable for E3."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var notes = pm.response.json();",
+              "if (notes.length > 0) {",
+              "    pm.collectionVariables.set(\"deliveryNoteId\", notes[0].id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "E3",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/delivery-notes/delete/{{deliveryNoteId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "delivery-notes",
+            "delete",
+            "{{deliveryNoteId}}"
+          ]
+        },
+        "description": "E3 delete and protect. Run E1 and E2 first. Success: 200 Delivery note deleted successfully. Error: use an unknown id for 404 The delivery note with that id does not exist. To show the protect rule, change the URL to {{baseUrl}}/api/laundry-orders/delete/{{readyOrderId}} while a note still exists for 409 That laundry order has delivery notes, delete them first."
+      }
+    },
+    {
+      "name": "F1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/stats/by-status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "stats",
+            "by-status"
+          ]
+        },
+        "description": "F1 JPQL GROUP BY. Success: 200 with one row per non-zero status, for example [[\"WASHING\",3],[\"RECEIVED\",3],[\"READY\",2],[\"CANCELLED\",2]]."
+      }
+    },
+    {
+      "name": "F2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/laundry-orders/cancel-day?attendantId={{attendantId}}&date={{cancelDate}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "laundry-orders",
+            "cancel-day"
+          ],
+          "query": [
+            {
+              "key": "attendantId",
+              "value": "{{attendantId}}"
+            },
+            {
+              "key": "date",
+              "value": "{{cancelDate}}"
+            }
+          ]
+        },
+        "description": "F2 JPQL UPDATE. Success: 200 with the real count, for example 2 laundry orders cancelled for Alice on 2026-10-20. READY orders are skipped."
+      }
+    }
+  ]
+}
