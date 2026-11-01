@@ -47,24 +47,31 @@ http://localhost:8085
 ```text
 POST   /api/customers/save
 GET    /api/customers/all
+GET    /api/customers/by-last-name?lastName=...
+GET    /api/customers/of-attendant/{attendantId}
 GET    /api/customers/{id}
 PUT    /api/customers/update/{id}
 DELETE /api/customers/delete/{id}
 
 POST   /api/attendants/save
 GET    /api/attendants/all
+GET    /api/attendants/by-service-type?name=...
 GET    /api/attendants/{id}
 PUT    /api/attendants/update/{id}
+PUT    /api/attendants/{attendantId}/service-types/{serviceTypeId}
+PATCH  /api/attendants/{attendantId}/machine?machineNumber=...
 DELETE /api/attendants/delete/{id}
 
 POST   /api/service-types/save
 GET    /api/service-types/all
+GET    /api/service-types/unused
 GET    /api/service-types/{id}
 PUT    /api/service-types/update/{id}
 DELETE /api/service-types/delete/{id}
 
 POST   /api/machines/save
 GET    /api/machines/all
+GET    /api/machines/free
 GET    /api/machines/{id}
 PUT    /api/machines/update/{id}
 DELETE /api/machines/delete/{id}
@@ -74,18 +81,17 @@ GET    /api/laundry-orders/all
 GET    /api/laundry-orders/{id}
 PUT    /api/laundry-orders/update/{id}
 DELETE /api/laundry-orders/delete/{id}
-GET    /api/laundry-orders/by-status
-GET    /api/laundry-orders/between
+GET    /api/laundry-orders/by-status?status=...
+GET    /api/laundry-orders/between?start=...&end=...
 GET    /api/laundry-orders/stats/by-status
-PATCH  /api/laundry-orders/{id}/status
-PATCH  /api/laundry-orders/cancel-day
+PATCH  /api/laundry-orders/{id}/status?status=...
+PATCH  /api/laundry-orders/cancel-day?attendantId=...&date=...
 
-POST   /api/delivery-notes/save
-GET    /api/delivery-notes/{id}
-GET    /api/delivery-notes/history
+POST   /api/delivery-notes/save?laundryOrderId=...
+GET    /api/delivery-notes/customer/{phone}
 DELETE /api/delivery-notes/delete/{id}
-
-GET    /api/reports/orders-by-customer
-GET    /api/reports/attendant-workload
-GET    /api/reports/monthly-revenue
 ```
+
+## Postman collection
+
+Import `laundry-service-booking-and-management-system-midterm.postman_collection.json` into Postman. The requests are named A2, B1, B2, B3, C1, C2, C3, C4, D1, D2, D3, D4, E1, E2, E3, F1 and F2.
