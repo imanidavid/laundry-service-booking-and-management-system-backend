@@ -9,6 +9,7 @@ import com.aua.laundry.repository.CustomerRepository;
 import com.aua.laundry.repository.DeliveryNoteRepository;
 import com.aua.laundry.repository.LaundryOrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -132,6 +133,12 @@ public class LaundryOrderService {
 
     public List<Object[]> getStatsByStatus() {
         return laundryOrderRepository.countByStatus();
+    }
+
+    @Transactional
+    public String cancelDay(UUID attendantId, LocalDate date) {
+        int count = laundryOrderRepository.cancelDay(attendantId, date);
+        return count + " laundry orders cancelled";
     }
 
 }

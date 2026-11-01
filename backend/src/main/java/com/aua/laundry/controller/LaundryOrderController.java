@@ -71,6 +71,13 @@ public class LaundryOrderController {
         return ResponseEntity.ok(stats);
     }
 
+    @PatchMapping("/cancel-day")
+    public ResponseEntity<String> cancelDay(@RequestParam UUID attendantId, @RequestParam String date) {
+        LocalDate pickupDate = LocalDate.parse(date);
+        String message = laundryOrderService.cancelDay(attendantId, pickupDate);
+        return ResponseEntity.ok(message);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<LaundryOrder> optional = laundryOrderService.findById(id);
