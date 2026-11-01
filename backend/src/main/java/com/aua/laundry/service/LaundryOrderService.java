@@ -130,4 +130,8 @@ public class LaundryOrderService {
         return "laundry deleted";
     }
 
+    public List<Object[]> getStatsByStatus() {
+        return laundryOrderRepository.countByStatus();
+    }
+
 }

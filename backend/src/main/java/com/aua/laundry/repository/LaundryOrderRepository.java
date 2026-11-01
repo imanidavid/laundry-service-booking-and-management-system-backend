@@ -3,6 +3,7 @@ package com.aua.laundry.repository;
 import com.aua.laundry.entity.LaundryOrder;
 import com.aua.laundry.entity.LaundryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,5 +16,8 @@ public interface LaundryOrderRepository extends JpaRepository<LaundryOrder, UUID
     List<LaundryOrder> findByPickupDateBetweenOrderByPickupDateAsc(LocalDate start, LocalDate end);
 
     boolean existsByAttendant_IdAndPickupDateAndStatusNot(UUID attendantId, LocalDate pickupDate, LaundryStatus status);
+
+    @Query("SELECT l.status, COUNT(l) FROM LaundryOrder l GROUP BY l.status")
+    List<Object[]> countByStatus();
 
 }

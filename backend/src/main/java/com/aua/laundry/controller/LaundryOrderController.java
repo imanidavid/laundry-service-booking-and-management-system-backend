@@ -65,6 +65,12 @@ public class LaundryOrderController {
         return ResponseEntity.ok(laundryOrders);
     }
 
+    @GetMapping("/stats/by-status")
+    public ResponseEntity<List<Object[]>> statsByStatus() {
+        List<Object[]> stats = laundryOrderService.getStatsByStatus();
+        return ResponseEntity.ok(stats);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<LaundryOrder> optional = laundryOrderService.findById(id);
