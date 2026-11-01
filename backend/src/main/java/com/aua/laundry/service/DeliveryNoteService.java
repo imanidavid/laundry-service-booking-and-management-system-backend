@@ -27,15 +27,15 @@ public class DeliveryNoteService {
     public String save(DeliveryNote deliveryNote, UUID laundryOrderId) {
         Optional<LaundryOrder> optional = laundryOrderRepository.findById(laundryOrderId);
         if (optional.isEmpty()) {
-            return "laundry with " + laundryOrderId + " dont exist";
+            return "The laundry order with that id does not exist";
         }
         if (optional.get().getStatus() != LaundryStatus.READY) {
-            return "delivery notes only for READY orders";
+            return "Delivery notes are only for READY laundry orders";
         }
         deliveryNote.setDeliveryDate(LocalDate.now());
         deliveryNote.setLaundryOrder(optional.get());
         deliveryNoteRepository.save(deliveryNote);
-        return "delivery note saved";
+        return "Delivery note saved successfully";
     }
 
     public List<DeliveryNote> getByCustomerPhone(String phone) {
@@ -44,10 +44,10 @@ public class DeliveryNoteService {
 
     public String delete(UUID id) {
         if (!deliveryNoteRepository.existsById(id)) {
-            return "delivery note with " + id + " dont exist";
+            return "The delivery note with that id does not exist";
         }
         deliveryNoteRepository.deleteById(id);
-        return "delivery note deleted";
+        return "Delivery note deleted successfully";
     }
 
 }

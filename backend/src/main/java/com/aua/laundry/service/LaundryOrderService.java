@@ -36,16 +36,16 @@ public class LaundryOrderService {
 
     public String save(LaundryOrder laundryOrder) {
         if (laundryOrder.getPickupDate() == null || laundryOrder.getPickupDate().isBefore(LocalDate.now())) {
-            return "laundry date cannot be in past";
+            return "Laundry order date cannot be in the past";
         }
         if (laundryOrder.getAttendant() != null && laundryOrder.getAttendant().getId() != null
                 && laundryOrderRepository.existsByAttendant_IdAndPickupDateAndStatusNot(
                 laundryOrder.getAttendant().getId(), laundryOrder.getPickupDate(), LaundryStatus.CANCELLED)) {
-            return "attendant already has order on that date";
+            return "Attendant already processes an order on that date";
         }
         laundryOrder.setStatus(LaundryStatus.RECEIVED);
         laundryOrderRepository.save(laundryOrder);
-        return "laundry saved";
+        return "Laundry order saved successfully";
     }
 
     public List<LaundryOrder> findAll() {
@@ -100,7 +100,7 @@ public class LaundryOrderService {
     public String changeStatus(UUID id, LaundryStatus newStatus) {
         Optional<LaundryOrder> optional = laundryOrderRepository.findById(id);
         if (optional.isEmpty()) {
-            return "laundry with " + id + " dont exist";
+            return "The laundry order with that id does not exist";
         }
         LaundryOrder laundryOrder = optional.get();
         LaundryStatus current = laundryOrder.getStatus();
@@ -112,23 +112,23 @@ public class LaundryOrderService {
             allowed = true;
         }
         if (!allowed) {
-            return "cannot change status from " + current + " to " + newStatus;
+            return "Cannot change status from " + current + " to " + newStatus;
         }
         laundryOrder.setStatus(newStatus);
         laundryOrderRepository.save(laundryOrder);
-        return "laundry status updated";
+        return "Laundry order status updated successfully";
     }
 
     public String delete(UUID id) {
         Optional<LaundryOrder> optional = laundryOrderRepository.findById(id);
         if (optional.isEmpty()) {
-            return "laundry with " + id + " dont exist";
+            return "The laundry order with that id does not exist";
         }
         if (deliveryNoteRepository.existsByLaundryOrder(optional.get())) {
-            return "delete delivery notes first";
+            return "That laundry order has delivery notes, delete them first";
         }
         laundryOrderRepository.deleteById(id);
-        return "laundry deleted";
+        return "Laundry order deleted succesfully";
     }
 
     public List<Object[]> getStatsByStatus() {

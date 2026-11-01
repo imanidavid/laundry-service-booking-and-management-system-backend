@@ -29,10 +29,10 @@ public class DeliveryNoteController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestParam UUID laundryOrderId, @RequestBody DeliveryNote deliveryNote) {
         String message = deliveryNoteService.save(deliveryNote, laundryOrderId);
-        if (message.startsWith("laundry with ")) {
+        if (message.equals("The laundry order with that id does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
-        if (message.equals("delivery notes only for READY orders")) {
+        if (message.equals("Delivery notes are only for READY laundry orders")) {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(message, HttpStatus.CREATED);
@@ -47,7 +47,7 @@ public class DeliveryNoteController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = deliveryNoteService.delete(id);
-        if (message.startsWith("delivery note with ")) {
+        if (message.equals("The delivery note with that id does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

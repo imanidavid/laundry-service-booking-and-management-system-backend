@@ -22,7 +22,7 @@ public class CustomerService {
 
     public String save(Customer customer) {
         customerRepository.save(customer);
-        return "customer saved";
+        return "Customer saved successfully";
     }
 
     public List<Customer> findAll() {
@@ -60,10 +60,10 @@ public class CustomerService {
 
     public String delete(UUID id) {
         if (!customerRepository.existsById(id)) {
-            return "customer with " + id + " dont exist";
+            return "The customer with that id does not exist";
         }
         customerRepository.deleteById(id);
-        return "customer deleted";
+        return "Customer deleted successfuly";
     }
 
 }

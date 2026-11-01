@@ -32,7 +32,7 @@ public class AttendantController {
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody Attendant attendant) {
         String message = attendantService.save(attendant);
-        if (message.equals("attendant saved")) {
+        if (message.equals("Attendant saved successfully")) {
             return new ResponseEntity<>(message, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
@@ -53,7 +53,7 @@ public class AttendantController {
     public ResponseEntity<Object> getById(@PathVariable UUID id) {
         Optional<Attendant> optional = attendantService.findById(id);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("attendant with " + id + " dont exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("The attendant with that id does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class AttendantController {
     public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody Attendant attendant) {
         Optional<Attendant> optional = attendantService.update(id, attendant);
         if (optional.isEmpty()) {
-            return new ResponseEntity<>("attendant with " + id + " dont exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("The attendant with that id does not exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(optional.get(), HttpStatus.OK);
     }
@@ -70,13 +70,13 @@ public class AttendantController {
     @PutMapping("/{attendantId}/service-types/{serviceTypeId}")
     public ResponseEntity<String> addServiceType(@PathVariable UUID attendantId, @PathVariable UUID serviceTypeId) {
         String message = attendantService.addServiceType(attendantId, serviceTypeId);
-        if (message.startsWith("attendant with ")) {
+        if (message.equals("The attendant with that id does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
-        if (message.startsWith("service type with ")) {
+        if (message.equals("That service type does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
-        if (message.equals("attendant already has service type")) {
+        if (message.equals("The attendant already has that service type")) {
             return new ResponseEntity<>(message, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -85,13 +85,13 @@ public class AttendantController {
     @PatchMapping("/{attendantId}/machine")
     public ResponseEntity<String> moveMachine(@PathVariable UUID attendantId, @RequestParam int machineNumber) {
         String message = attendantService.moveAttendantToMachine(attendantId, machineNumber);
-        if (message.startsWith("attendant with ")) {
+        if (message.equals("The attendant with that id does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
-        if (message.startsWith("machine with ")) {
+        if (message.equals("The machine with that machineNumber does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
-        if (message.equals("machine taken by another attendant")) {
+        if (message.equals("That machine is taken by another attendant")) {
             return new ResponseEntity<>(message, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -100,7 +100,7 @@ public class AttendantController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         String message = attendantService.delete(id);
-        if (message.startsWith("attendant with ")) {
+        if (message.equals("The attendant with that id does not exist")) {
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(message, HttpStatus.OK);

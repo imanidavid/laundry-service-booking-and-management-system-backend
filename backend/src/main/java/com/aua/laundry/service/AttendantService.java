@@ -28,7 +28,7 @@ public class AttendantService {
 
     public String save(Attendant attendant) {
         attendantRepository.save(attendant);
-        return "attendant saved";
+        return "Attendant saved successfully";
     }
 
     public List<Attendant> findAll() {
@@ -72,50 +72,50 @@ public class AttendantService {
 
     public String addServiceType(UUID attendantId, UUID serviceTypeId) {
         if (!attendantRepository.existsById(attendantId)) {
-            return "attendant with " + attendantId + " dont exist";
+            return "The attendant with that id does not exist";
         }
         Optional<ServiceType> serviceTypeOptional = serviceTypeRepository.findById(serviceTypeId);
         if (serviceTypeOptional.isEmpty()) {
-            return "service type with " + serviceTypeId + " dont exist";
+            return "That service type does not exist";
         }
         Attendant attendant = attendantRepository.findById(attendantId).get();
         for (ServiceType serviceType : attendant.getServiceTypes()) {
             if (serviceType.getId().equals(serviceTypeId)) {
-                return "attendant already has service type";
+                return "The attendant already has that service type";
             }
         }
         attendant.getServiceTypes().add(serviceTypeOptional.get());
         attendantRepository.save(attendant);
-        return "service type added";
+        return "Service type added to the attendant";
     }
 
     public String moveAttendantToMachine(UUID attendantId, int machineNumber) {
         if (!attendantRepository.existsById(attendantId)) {
-            return "attendant with " + attendantId + " dont exist";
+            return "The attendant with that id does not exist";
         }
         Optional<Machine> machineOptional = machineRepository.findByMachineNumber(machineNumber);
         if (machineOptional.isEmpty()) {
-            return "machine with " + machineNumber + " dont exist";
+            return "The machine with that machineNumber does not exist";
         }
         Machine machine = machineOptional.get();
         Attendant attendant = attendantRepository.findById(attendantId).get();
         if (attendant.getMachine() != null && attendant.getMachine().getMachineNumber() == machineNumber) {
-            return "machine changed";
+            return "Machine changed successfully";
         }
         if (attendantRepository.existsByMachine(machine)) {
-            return "machine taken by another attendant";
+            return "That machine is taken by another attendant";
         }
         attendant.setMachine(machine);
         attendantRepository.save(attendant);
-        return "machine changed";
+        return "Machine changed successfully";
     }
 
     public String delete(UUID id) {
         if (!attendantRepository.existsById(id)) {
-            return "attendant with " + id + " dont exist";
+            return "The attendant with that id does not exist";
         }
         attendantRepository.deleteById(id);
-        return "attendant deleted";
+        return "Attendant deleted succesfuly";
     }
 
 }
